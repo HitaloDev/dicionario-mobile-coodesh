@@ -31,7 +31,11 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
+
+# words dictionary file
+words_dictionary.json
 
 # typescript
 *.tsbuildinfo
