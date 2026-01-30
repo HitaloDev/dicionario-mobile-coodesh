@@ -1,42 +1,47 @@
 import React from 'react';
 import { View, Text, FlatList, ListRenderItem } from 'react-native';
+import { useDictionary } from '@/src/contexts';
+import { EmptyState } from '@/src/components';
+import { HistoryWord } from '@/src/types';
 import { styles } from './styles/history';
 
-interface HistoryItem {
-  word: string;
-  timestamp: string;
-}
-
 export default function HistoryScreen() {
-  const historyData: HistoryItem[] = [];
+  const { history } = useDictionary();
 
-  const renderItem: ListRenderItem<HistoryItem> = ({ item }) => (
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const renderItem: ListRenderItem<HistoryWord> = ({ item }) => (
     <View style={styles.itemContainer}>
       <View>
         <Text style={styles.word}>{item.word}</Text>
-        <Text style={styles.timestamp}>{item.timestamp}</Text>
+        <Text style={styles.timestamp}>{formatDate(item.viewedAt)}</Text>
       </View>
     </View>
   );
 
-  if (historyData.length === 0) {
+  if (history.length === 0) {
     return (
       <View style={styles.container}>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
-            Nenhuma palavra visualizada ainda
-          </Text>
-        </View>
+        <EmptyState message="Nenhuma palavra visualizada ainda" />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <FlatList<HistoryItem>
-        data={historyData}
+      <FlatList<HistoryWord>
+        data={history}
         renderItem={renderItem}
-        keyExtractor={(item) => item.word}
+        keyExtractor={(item) => item.word + item.viewedAt}
         contentContainerStyle={styles.listContainer}
       />
     </View>

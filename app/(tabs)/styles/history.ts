@@ -27,15 +27,4 @@ export const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 4,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 32,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-  },
 });

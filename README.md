@@ -9,11 +9,12 @@ Este é um app de dicionário que consome a [Free Dictionary API](https://dictio
 ## Tecnologias Utilizadas
 
 - React Native
-- Expo
+- Expo (SDK 54)
 - Expo Router (navegação file-based)
 - TypeScript
 - React Navigation (Material Top Tabs)
-- AsyncStorage (persistência local)
+- Supabase (banco de dados e autenticação)
+- AsyncStorage (persistência local e cache)
 - Context API (gerenciamento de estado)
 
 ## Estrutura do Projeto
@@ -21,6 +22,18 @@ Este é um app de dicionário que consome a [Free Dictionary API](https://dictio
 Optei por uma organização que separa componentes de estilos, facilitando a manutenção:
 
 ```
+src/
+  ├── components/          - Componentes reutilizáveis
+  │   ├── word-card/
+  │   └── empty-state/
+  ├── services/            - Chamadas de API e cache
+  │   ├── api.ts
+  │   └── cache.ts
+  ├── types/               - TypeScript types/interfaces
+  ├── contexts/            - Context API para estado global
+  ├── utils/               - Funções utilitárias
+  └── constants/           - Constantes e cores
+
 app/
   ├── (tabs)/
   │   ├── word-list.tsx
@@ -33,18 +46,39 @@ app/
 
 ## Como Executar
 
-1. Instalar as dependências:
+### 1. Configurar variáveis de ambiente
+
+Copie o arquivo `.env.example` para `.env`:
+
+**Windows (PowerShell):**
+```powershell
+copy .env.example .env
+```
+
+**Mac/Linux:**
+```bash
+cp .env.example .env
+```
+
+As credenciais do Supabase já estão configuradas e prontas para uso!
+
+### 2. Instalar dependências
+
 ```bash
 npm install
 ```
 
-2. Iniciar o app:
+### 3. Iniciar o app
+
 ```bash
 npm start
 ```
 
-3. Escolher a plataforma:
-- Pressione `a` para abrir o app com o Android Studio
+### 4. Escolher a plataforma
+
+- Pressione `a` para Android
+- Pressione `i` para iOS
+- Pressione `w` para Web
 
 ## O que já foi Implementado
 
@@ -60,6 +94,24 @@ npm start
 - Separação dos estilos dentro de um arquivo styles.ts
 - Adição de palavras mockadas para simular o consumo da API
 - Organização e estruturação de pastas e arquivos
+
+### Terceiro Commit - Arquitetura e Componentização + Supabase
+- Criação da pasta `src/` para melhor organização do código
+- Implementação de componentes reutilizáveis (WordCard com estrela de favorito, EmptyState)
+- Criação de tipos TypeScript para Word, Phonetic, Meaning, Definition
+- Serviço de API para comunicação com o Free Dictionary API
+- Sistema de cache com AsyncStorage para otimizar requisições
+- Context API (DictionaryContext) para gerenciamento de estado global
+- Serviço de storage para persistência de favoritos e histórico
+- Constantes de cores centralizadas
+- Integração dos componentes nas telas existentes
+- Arquitetura escalável seguindo princípios de Clean Code
+- Configuração do Supabase como banco de dados
+- Criação do serviço de palavras (words-service)
+- Implementação de scroll infinito na lista de palavras
+- Estados de loading e erro
+- Integração com lista de palavras do repositório dwyl/english-words
+- Documentação completa de setup do Supabase
 
 ## Decisões Técnicas
 
