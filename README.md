@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# Dicionário Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo mobile para consulta de palavras em inglês, desenvolvido com React Native e Expo Router.
 
-## Get started
+## Sobre o Projeto
 
-1. Install dependencies
+Este é um app de dicionário que consome a [Free Dictionary API](https://dictionaryapi.dev/) para exibir palavras em inglês, suas definições, fonética e exemplos de uso. O app permite salvar palavras como favoritas e manter um histórico das palavras já visualizadas.
 
-   ```bash
-   npm install
-   ```
+## Tecnologias Utilizadas
 
-2. Start the app
+- React Native
+- Expo
+- Expo Router (navegação file-based)
+- TypeScript
+- React Navigation (Material Top Tabs)
+- AsyncStorage (persistência local)
+- Context API (gerenciamento de estado)
 
-   ```bash
-   npx expo start
-   ```
+## Estrutura do Projeto
 
-In the output, you'll find options to open the app in a
+Optei por uma organização que separa componentes de estilos, facilitando a manutenção:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+app/
+  ├── (tabs)/
+  │   ├── word-list.tsx
+  │   ├── history-screen.tsx
+  │   ├── favorites-screen.tsx
+  │   ├── _layout.tsx
+  │   └── styles/
+  └── _layout.tsx
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Como Executar
 
-## Learn more
+1. Instalar as dependências:
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+2. Iniciar o app:
+```bash
+npm start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+3. Escolher a plataforma:
+- Pressione `a` para abrir o app com o Android Studio
 
-## Join the community
+## O que já foi Implementado
 
-Join our community of developers creating universal apps.
+### Primeiro Commit - Limpeza Inicial
+- Remoção dos arquivos demo e componentes de exemplo do Expo
+- Exclusão de imagens e scripts não utilizados
+- Criação da estrutura base limpa do projeto
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Segundo Commit - Estruturação das Telas
+- Criação das 3 telas principais (Lista de Palavras, Histórico e Favoritos)
+- Implementação de tabs no topo seguindo o wireframe
+- Layout em grid de 3 colunas para exibir as palavras
+- Separação dos estilos dentro de um arquivo styles.ts
+- Adição de palavras mockadas para simular o consumo da API
+- Organização e estruturação de pastas e arquivos
+
+## Decisões Técnicas
+
+**Por que Supabase ao invés de Firebase?**
+- Plano gratuito mais generoso
+- PostgreSQL nativo facilita queries relacionais
+- Melhor DX com TypeScript
+- API REST automática
+
+**Estrutura de pastas**
+- Estilos separados para facilitar manutenção
+- Pasta `src/` centralizando a regra de negócio
+- Componentes reutilizáveis facilitando utilização e manutenção
+- Seguindo boas práticas de Clean Code
+
+## Desafio
+
+> This is a challenge by [Coodesh](https://coodesh.com/)
