@@ -6,6 +6,8 @@ Aplicativo mobile para consulta de palavras em inglês, desenvolvido com React N
 
 Este é um app de dicionário que consome a [Free Dictionary API](https://dictionaryapi.dev/) para exibir palavras em inglês, suas definições, fonética e exemplos de uso. O app permite salvar palavras como favoritas e manter um histórico das palavras já visualizadas.
 
+![App Screenshot](./assets/mockup-app.png)
+
 ## Tecnologias Utilizadas
 
 - React Native
@@ -18,6 +20,8 @@ Este é um app de dicionário que consome a [Free Dictionary API](https://dictio
 - Context API (gerenciamento de estado)
 - Expo Audio (player de áudio para pronúncia)
 - Free Dictionary API
+- TSyringe (injeção de dependência)
+- Jest (testes unitários)
 
 ## Estrutura do Projeto
 
@@ -33,11 +37,13 @@ src/
   │   ├── api.ts
   │   ├── cache.ts
   │   ├── supabase.ts
-  │   └── words-service.ts
+  │   ├── words-service.ts
+  │   └── sync-service.ts
   ├── types/               - TypeScript types/interfaces
   ├── contexts/            - Context API para estado global
   ├── utils/               - Funções utilitárias
-  └── constants/           - Constantes e cores
+  ├── constants/           - Constantes e cores
+  └── di/                  - Container de injeção de dependência
 
 app/
   ├── (tabs)/
@@ -47,6 +53,8 @@ app/
   │   ├── _layout.tsx
   │   └── styles/
   ├── word-details.tsx     - Tela de detalhes da palavra
+  ├── login.tsx            - Tela de login
+  ├── register.tsx         - Tela de registro
   └── _layout.tsx
 ```
 
@@ -85,6 +93,20 @@ npm start
 - Pressione `a` para Android
 - Pressione `i` para iOS
 - Pressione `w` para Web
+
+## Testes
+
+O projeto possui testes unitários configurados com Jest e Testing Library.
+
+### Rodar todos os testes
+```bash
+npm test
+```
+
+Os testes cobrem:
+- Serviços (API, Cache, Storage)
+- Componentes (EmptyState, WordCard)
+- Lógica de negócio
 
 ## O que já foi Implementado
 
@@ -145,6 +167,17 @@ npm start
 - Context de autenticação global
 - Performance otimizada na listagem (60 itens por vez, queries sem count)
 
+### Sexto Commit - Injeção de Dependência e Testes
+- Implementação de DI com TSyringe
+- Refatoração de serviços para classes injetáveis
+- Configuração de decorators no TypeScript
+- Container de dependências centralizado
+- Testes unitários com Jest e Testing Library
+- Testes de serviços (API, Cache, Storage)
+- Testes de componentes (EmptyState)
+- Scripts npm para rodar testes
+- Cobertura de código configurada
+
 ## Decisões Técnicas
 
 **Por que Supabase ao invés de Firebase?**
@@ -152,6 +185,18 @@ npm start
 - PostgreSQL nativo facilita queries relacionais
 - Melhor DX com TypeScript
 - API REST automática
+
+**Por que TSyringe para DI?**
+- Biblioteca leve e simples da Microsoft
+- Decorators nativos do TypeScript
+- Fácil integração com React Native
+- Facilita testes e manutenção
+
+**Por que Jest + Testing Library?**
+- Suporte nativo do Expo
+- Padrão da comunidade React Native
+- Fácil de escrever testes úteis
+- Boa documentação
 
 **Estrutura de pastas**
 - Estilos separados para facilitar manutenção

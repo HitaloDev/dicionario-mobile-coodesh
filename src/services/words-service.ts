@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { injectable } from 'tsyringe';
 import { supabase } from './supabase';
 
 export interface WordItem {
@@ -14,7 +16,8 @@ interface WordsResponse {
 
 const WORDS_PER_PAGE = 60;
 
-export const wordsService = {
+@injectable()
+export class WordsService {
   async getWords(page: number = 0): Promise<WordsResponse> {
     try {
       const from = page * WORDS_PER_PAGE;
@@ -39,7 +42,7 @@ export const wordsService = {
       console.error('Error fetching words:', error);
       throw error;
     }
-  },
+  }
 
   async searchWords(query: string, limit: number = 20): Promise<WordItem[]> {
     try {
@@ -59,7 +62,7 @@ export const wordsService = {
       console.error('Error searching words:', error);
       throw error;
     }
-  },
+  }
 
   async getTotalCount(): Promise<number> {
     try {
@@ -76,5 +79,7 @@ export const wordsService = {
       console.error('Error getting total count:', error);
       return 0;
     }
-  },
-};
+  }
+}
+
+export const wordsService = new WordsService();

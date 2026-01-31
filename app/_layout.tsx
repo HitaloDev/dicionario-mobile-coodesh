@@ -1,11 +1,18 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
+import 'reflect-metadata';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { DictionaryProvider, AuthProvider, useAuth } from '@/src/contexts';
+import { setupDependencyInjection } from '@/src/di';
+import { CustomSplashScreen } from '@/src/components/custom-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+setupDependencyInjection();
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -15,9 +22,25 @@ function RootLayoutNav() {
   const { session, loading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    if (loading) return;
+    async function prepare() {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+        await SplashScreen.hideAsync();
+      }
+    }
+
+    prepare();
+  }, []);
+
+  useEffect(() => {
+    if (loading || !appIsReady) return;
 
     const inAuthGroup = segments[0] === '(tabs)' || segments[0] === 'word-details';
 
@@ -26,7 +49,11 @@ function RootLayoutNav() {
     } else if (session && !inAuthGroup) {
       router.replace('/(tabs)/word-list');
     }
-  }, [session, segments, loading]);
+  }, [session, segments, loading, appIsReady]);
+
+  if (!appIsReady) {
+    return <CustomSplashScreen />;
+  }
 
   return (
     <Stack>

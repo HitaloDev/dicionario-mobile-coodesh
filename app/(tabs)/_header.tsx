@@ -1,8 +1,8 @@
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAuth } from '@/src/contexts';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { styles } from './_header-styles';
 
 export function TabHeader() {
@@ -33,9 +33,9 @@ export function TabHeader() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Dicionário Mobile Coodesh</Text>
+        <Text style={styles.title}>Dicionário</Text>
         <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <IconSymbol name="rectangle.portrait.and.arrow.right" size={24} color="#5956E9" />
+          <Ionicons name="exit-outline" size={24} color="#5956E9" />
         </TouchableOpacity>
       </View>
     </View>

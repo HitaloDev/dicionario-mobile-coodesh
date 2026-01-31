@@ -1,10 +1,13 @@
+import 'reflect-metadata';
+import { injectable } from 'tsyringe';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteWord, HistoryWord } from '../types';
 
 const FAVORITES_KEY = '@dictionary:favorites';
 const HISTORY_KEY = '@dictionary:history';
 
-export const storageService = {
+@injectable()
+export class StorageService {
   async getFavorites(): Promise<FavoriteWord[]> {
     try {
       const data = await AsyncStorage.getItem(FAVORITES_KEY);
@@ -13,7 +16,7 @@ export const storageService = {
       console.error('Error getting favorites:', error);
       return [];
     }
-  },
+  }
 
   async setFavorites(favorites: FavoriteWord[]): Promise<void> {
     try {
@@ -21,7 +24,7 @@ export const storageService = {
     } catch (error) {
       console.error('Error setting favorites:', error);
     }
-  },
+  }
 
   async addFavorite(word: string): Promise<void> {
     try {
@@ -39,7 +42,7 @@ export const storageService = {
     } catch (error) {
       console.error('Error adding favorite:', error);
     }
-  },
+  }
 
   async removeFavorite(word: string): Promise<void> {
     try {
@@ -49,7 +52,7 @@ export const storageService = {
     } catch (error) {
       console.error('Error removing favorite:', error);
     }
-  },
+  }
 
   async getHistory(): Promise<HistoryWord[]> {
     try {
@@ -59,7 +62,7 @@ export const storageService = {
       console.error('Error getting history:', error);
       return [];
     }
-  },
+  }
 
   async setHistory(history: HistoryWord[]): Promise<void> {
     try {
@@ -67,7 +70,7 @@ export const storageService = {
     } catch (error) {
       console.error('Error setting history:', error);
     }
-  },
+  }
 
   async addToHistory(word: string): Promise<void> {
     try {
@@ -86,7 +89,7 @@ export const storageService = {
     } catch (error) {
       console.error('Error adding to history:', error);
     }
-  },
+  }
 
   async clearHistory(): Promise<void> {
     try {
@@ -94,5 +97,7 @@ export const storageService = {
     } catch (error) {
       console.error('Error clearing history:', error);
     }
-  },
-};
+  }
+}
+
+export const storageService = new StorageService();

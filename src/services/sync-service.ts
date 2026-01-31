@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { injectable } from 'tsyringe';
 import { supabase } from './supabase';
 
 export interface FavoriteItem {
@@ -14,7 +16,8 @@ export interface HistoryItem {
   viewed_at: string;
 }
 
-export const syncService = {
+@injectable()
+export class SyncService {
   async getFavorites(): Promise<FavoriteItem[]> {
     const { data, error } = await supabase
       .from('favorites')
@@ -27,7 +30,7 @@ export const syncService = {
     }
 
     return data || [];
-  },
+  }
 
   async addFavorite(word: string): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
@@ -41,7 +44,7 @@ export const syncService = {
       console.error('Error adding favorite:', error);
       throw error;
     }
-  },
+  }
 
   async removeFavorite(word: string): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
@@ -57,7 +60,7 @@ export const syncService = {
       console.error('Error removing favorite:', error);
       throw error;
     }
-  },
+  }
 
   async getHistory(): Promise<HistoryItem[]> {
     const { data, error } = await supabase
@@ -72,7 +75,7 @@ export const syncService = {
     }
 
     return data || [];
-  },
+  }
 
   async addToHistory(word: string): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
@@ -86,7 +89,7 @@ export const syncService = {
       console.error('Error adding to history:', error);
       throw error;
     }
-  },
+  }
 
   async clearHistory(): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
@@ -101,5 +104,7 @@ export const syncService = {
       console.error('Error clearing history:', error);
       throw error;
     }
-  },
-};
+  }
+}
+
+export const syncService = new SyncService();
