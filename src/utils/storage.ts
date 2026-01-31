@@ -15,6 +15,14 @@ export const storageService = {
     }
   },
 
+  async setFavorites(favorites: FavoriteWord[]): Promise<void> {
+    try {
+      await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Error setting favorites:', error);
+    }
+  },
+
   async addFavorite(word: string): Promise<void> {
     try {
       const favorites = await this.getFavorites();
@@ -50,6 +58,14 @@ export const storageService = {
     } catch (error) {
       console.error('Error getting history:', error);
       return [];
+    }
+  },
+
+  async setHistory(history: HistoryWord[]): Promise<void> {
+    try {
+      await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {
+      console.error('Error setting history:', error);
     }
   },
 

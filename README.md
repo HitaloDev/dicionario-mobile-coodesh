@@ -13,10 +13,10 @@ Este é um app de dicionário que consome a [Free Dictionary API](https://dictio
 - Expo Router (navegação file-based)
 - TypeScript
 - React Navigation (Material Top Tabs)
-- Supabase (banco de dados PostgreSQL)
+- Supabase (banco de dados PostgreSQL e autenticação)
 - AsyncStorage (persistência local e cache)
 - Context API (gerenciamento de estado)
-- Expo AV (player de áudio)
+- Expo Audio (player de áudio para pronúncia)
 - Free Dictionary API
 
 ## Estrutura do Projeto
@@ -120,17 +120,30 @@ npm start
 
 ### Quarto Commit - Busca e Tela de Detalhes
 - Componente SearchBar com ícones e botão de limpar
-- Busca em tempo real de palavras no Supabase
+- Busca em tempo real com debounce (1 segundo) para otimizar chamadas
 - Filtro instantâneo na lista de palavras
 - Tela de detalhes integrada com Free Dictionary API
 - Card roxo (#5956E9) com palavra e fonética
-- Player de áudio para pronúncia (expo-av)
+- Player de áudio para pronúncia usando expo-audio
 - Exibição de meanings, definições e exemplos de uso
 - Sinônimos exibidos em chips
 - Sistema de cache inteligente para otimizar requisições
 - Botão de favoritar na tela de detalhes
 - Navegação fluida entre lista e detalhes
 - Tratamento de erros com opção de retry
+- Alerta quando palavra não é encontrada na API
+
+### Quinto Commit - Autenticação e Sincronização
+- Telas de Login e Registro com logo
+- Autenticação via Supabase (email/senha)
+- Login automático após registro
+- Header com botão de logout
+- Proteção de rotas (redirecionamento automático)
+- Sincronização de favoritos e histórico na nuvem
+- Tabelas com Row Level Security (RLS) no Supabase
+- Fallback para dados locais se offline
+- Context de autenticação global
+- Performance otimizada na listagem (60 itens por vez, queries sem count)
 
 ## Decisões Técnicas
 
@@ -145,14 +158,6 @@ npm start
 - Pasta `src/` centralizando a regra de negócio
 - Componentes reutilizáveis facilitando utilização e manutenção
 - Seguindo boas práticas de Clean Code
-
-## Próximos Passos
-
-- [ ] Autenticação com Supabase (login/signup)
-- [ ] Sincronização de favoritos e histórico na nuvem
-- [ ] Navegação "Próximo/Anterior" na tela de detalhes
-- [ ] Testes unitários e E2E
-- [ ] Melhorias de performance e otimizações
 
 ## Desafio
 
