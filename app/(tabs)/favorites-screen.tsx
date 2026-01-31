@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, ListRenderItem } from 'react-na
 import { useDictionary } from '@/src/contexts';
 import { EmptyState } from '@/src/components';
 import { FavoriteWord } from '@/src/types';
-import { styles } from './styles/favorites';
+import { styles } from './styles/_favorites';
 
 export default function FavoritesScreen() {
   const { favorites, removeFavorite } = useDictionary();

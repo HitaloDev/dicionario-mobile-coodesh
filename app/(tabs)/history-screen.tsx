@@ -3,7 +3,7 @@ import { View, Text, FlatList, ListRenderItem } from 'react-native';
 import { useDictionary } from '@/src/contexts';
 import { EmptyState } from '@/src/components';
 import { HistoryWord } from '@/src/types';
-import { styles } from './styles/history';
+import { styles } from './styles/_history';
 
 export default function HistoryScreen() {
   const { history } = useDictionary();

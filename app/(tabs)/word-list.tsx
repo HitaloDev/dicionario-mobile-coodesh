@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { View, FlatList, ListRenderItem, ActivityIndicator, Text } from 'react-native';
-import { WordCard } from '@/src/components';
+import { useRouter } from 'expo-router';
+import { WordCard, SearchBar } from '@/src/components';
 import { useDictionary } from '@/src/contexts';
 import { wordsService, WordItem } from '@/src/services/words-service';
-import { styles } from './styles/word-list';
+import { styles } from './styles/_word-list';
 
 export default function WordListScreen() {
+  const router = useRouter();
   const { addToHistory, addFavorite, removeFavorite, isFavorite } = useDictionary();
   const [words, setWords] = useState<WordItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,10 +15,38 @@ export default function WordListScreen() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<WordItem[]>([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     loadWords();
   }, []);
+
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (searchQuery.length > 0) {
+      setIsSearchLoading(true);
+      searchTimeoutRef.current = setTimeout(() => {
+        handleSearch(searchQuery);
+      }, 1000);
+    } else {
+      setIsSearching(false);
+      setSearchResults([]);
+      setIsSearchLoading(false);
+    }
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   const loadWords = async () => {
     try {
@@ -35,7 +65,7 @@ export default function WordListScreen() {
   };
 
   const loadMoreWords = async () => {
-    if (loadingMore || !hasMore) return;
+    if (loadingMore || !hasMore || isSearching) return;
 
     try {
       setLoadingMore(true);
@@ -51,9 +81,34 @@ export default function WordListScreen() {
     }
   };
 
+  const handleSearch = useCallback(
+    async (query: string) => {
+      if (query.length === 0) {
+        setIsSearching(false);
+        setSearchResults([]);
+        setIsSearchLoading(false);
+        return;
+      }
+
+      try {
+        setIsSearching(true);
+        const results = await wordsService.searchWords(query, 30);
+        setSearchResults(results);
+      } catch (err) {
+        console.error('Error searching words:', err);
+      } finally {
+        setIsSearchLoading(false);
+      }
+    },
+    []
+  );
+
   const handleWordPress = async (word: string) => {
     await addToHistory(word);
-    console.log('Navigate to word details:', word);
+    router.push({
+      pathname: '/(tabs)/../word-details' as any,
+      params: { word },
+    });
   };
 
   const handleFavoritePress = async (word: string) => {
@@ -62,6 +117,13 @@ export default function WordListScreen() {
     } else {
       await addFavorite(word);
     }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setIsSearching(false);
+    setSearchResults([]);
+    setIsSearchLoading(false);
   };
 
   const renderItem: ListRenderItem<WordItem> = ({ item }) => (
@@ -74,7 +136,7 @@ export default function WordListScreen() {
   );
 
   const renderFooter = () => {
-    if (!loadingMore) return null;
+    if (!loadingMore || isSearching) return null;
     return (
       <View style={styles.footer}>
         <ActivityIndicator size="small" color="#5956E9" />
@@ -99,10 +161,24 @@ export default function WordListScreen() {
     );
   }
 
+  const displayWords = isSearching ? searchResults : words;
+
   return (
     <View style={styles.container}>
+      <SearchBar
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onClear={handleClearSearch}
+        placeholder="Buscar palavra em inglês..."
+        isLoading={isSearchLoading}
+      />
+      {isSearching && searchResults.length === 0 && searchQuery.length > 0 && !isSearchLoading && (
+        <View style={styles.noResultsContainer}>
+          <Text style={styles.noResultsText}>Nenhuma palavra encontrada</Text>
+        </View>
+      )}
       <FlatList<WordItem>
-        data={words}
+        data={displayWords}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={3}

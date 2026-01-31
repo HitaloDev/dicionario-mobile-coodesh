@@ -13,9 +13,11 @@ Este é um app de dicionário que consome a [Free Dictionary API](https://dictio
 - Expo Router (navegação file-based)
 - TypeScript
 - React Navigation (Material Top Tabs)
-- Supabase (banco de dados e autenticação)
+- Supabase (banco de dados PostgreSQL)
 - AsyncStorage (persistência local e cache)
 - Context API (gerenciamento de estado)
+- Expo AV (player de áudio)
+- Free Dictionary API
 
 ## Estrutura do Projeto
 
@@ -25,10 +27,13 @@ Optei por uma organização que separa componentes de estilos, facilitando a man
 src/
   ├── components/          - Componentes reutilizáveis
   │   ├── word-card/
-  │   └── empty-state/
+  │   ├── empty-state/
+  │   └── search-bar/
   ├── services/            - Chamadas de API e cache
   │   ├── api.ts
-  │   └── cache.ts
+  │   ├── cache.ts
+  │   ├── supabase.ts
+  │   └── words-service.ts
   ├── types/               - TypeScript types/interfaces
   ├── contexts/            - Context API para estado global
   ├── utils/               - Funções utilitárias
@@ -41,6 +46,7 @@ app/
   │   ├── favorites-screen.tsx
   │   ├── _layout.tsx
   │   └── styles/
+  ├── word-details.tsx     - Tela de detalhes da palavra
   └── _layout.tsx
 ```
 
@@ -108,10 +114,23 @@ npm start
 - Arquitetura escalável seguindo princípios de Clean Code
 - Configuração do Supabase como banco de dados
 - Criação do serviço de palavras (words-service)
-- Implementação de scroll infinito na lista de palavras
+- Implementação de scroll infinito na lista de palavras (30 palavras por vez)
 - Estados de loading e erro
-- Integração com lista de palavras do repositório dwyl/english-words
-- Documentação completa de setup do Supabase
+- Integração com ~470.000 palavras do repositório dwyl/english-words
+
+### Quarto Commit - Busca e Tela de Detalhes
+- Componente SearchBar com ícones e botão de limpar
+- Busca em tempo real de palavras no Supabase
+- Filtro instantâneo na lista de palavras
+- Tela de detalhes integrada com Free Dictionary API
+- Card roxo (#5956E9) com palavra e fonética
+- Player de áudio para pronúncia (expo-av)
+- Exibição de meanings, definições e exemplos de uso
+- Sinônimos exibidos em chips
+- Sistema de cache inteligente para otimizar requisições
+- Botão de favoritar na tela de detalhes
+- Navegação fluida entre lista e detalhes
+- Tratamento de erros com opção de retry
 
 ## Decisões Técnicas
 
@@ -126,6 +145,14 @@ npm start
 - Pasta `src/` centralizando a regra de negócio
 - Componentes reutilizáveis facilitando utilização e manutenção
 - Seguindo boas práticas de Clean Code
+
+## Próximos Passos
+
+- [ ] Autenticação com Supabase (login/signup)
+- [ ] Sincronização de favoritos e histórico na nuvem
+- [ ] Navegação "Próximo/Anterior" na tela de detalhes
+- [ ] Testes unitários e E2E
+- [ ] Melhorias de performance e otimizações
 
 ## Desafio
 
