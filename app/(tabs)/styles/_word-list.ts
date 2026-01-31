@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
   },
   gridContainer: {
     padding: 16,
+    paddingTop: 0,
   },
   columnWrapper: {
     justifyContent: 'space-between',
@@ -37,5 +38,14 @@ export const styles = StyleSheet.create({
   footer: {
     paddingVertical: 20,
     alignItems: 'center',
+  },
+  noResultsContainer: {
+    padding: 32,
+    alignItems: 'center',
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
   },
 });

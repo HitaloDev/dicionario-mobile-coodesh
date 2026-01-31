@@ -18,6 +18,13 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen 
+            name="word-details" 
+            options={{ 
+              title: 'Detalhes da Palavra',
+              headerBackTitle: 'Voltar',
+            }} 
+          />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
