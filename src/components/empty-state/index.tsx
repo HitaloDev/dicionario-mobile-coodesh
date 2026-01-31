@@ -8,7 +8,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ message }: EmptyStateProps) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="empty-state-container">
       <Text style={styles.message}>{message}</Text>
     </View>
   );

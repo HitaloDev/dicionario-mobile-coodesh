@@ -1,7 +1,9 @@
+import 'reflect-metadata';
+import { injectable } from 'tsyringe';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Word } from '../types';
 
-const CACHE_PREFIX = '@dictionary_cache:';
+const CACHE_PREFIX = '@dictionary:cache:';
 const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
 
 interface CacheItem {
@@ -9,52 +11,54 @@ interface CacheItem {
   timestamp: number;
 }
 
-export const cacheService = {
+@injectable()
+export class CacheService {
   async get(key: string): Promise<Word | null> {
     try {
-      const cacheKey = `${CACHE_PREFIX}${key}`;
-      const cached = await AsyncStorage.getItem(cacheKey);
+      const cached = await AsyncStorage.getItem(`${CACHE_PREFIX}${key}`);
       
       if (!cached) {
         return null;
       }
-
-      const cacheItem: CacheItem = JSON.parse(cached);
+      
+      const item: CacheItem = JSON.parse(cached);
       const now = Date.now();
-
-      if (now - cacheItem.timestamp > CACHE_EXPIRATION) {
-        await AsyncStorage.removeItem(cacheKey);
+      
+      if (now - item.timestamp > CACHE_EXPIRATION) {
+        await this.remove(key);
         return null;
       }
-
-      return cacheItem.data;
+      
+      return item.data;
     } catch (error) {
-      console.error('Cache get error:', error);
+      console.error('Error getting from cache:', error);
       return null;
     }
-  },
+  }
 
   async set(key: string, data: Word): Promise<void> {
     try {
-      const cacheKey = `${CACHE_PREFIX}${key}`;
-      const cacheItem: CacheItem = {
+      const item: CacheItem = {
         data,
         timestamp: Date.now(),
       };
-      await AsyncStorage.setItem(cacheKey, JSON.stringify(cacheItem));
+      
+      await AsyncStorage.setItem(
+        `${CACHE_PREFIX}${key}`,
+        JSON.stringify(item)
+      );
     } catch (error) {
-      console.error('Cache set error:', error);
+      console.error('Error setting cache:', error);
     }
-  },
+  }
 
   async remove(key: string): Promise<void> {
     try {
-      const cacheKey = `${CACHE_PREFIX}${key}`;
-      await AsyncStorage.removeItem(cacheKey);
+      await AsyncStorage.removeItem(`${CACHE_PREFIX}${key}`);
     } catch (error) {
-      console.error('Cache remove error:', error);
+      console.error('Error removing from cache:', error);
     }
-  },
+  }
 
   async clear(): Promise<void> {
     try {
@@ -62,7 +66,9 @@ export const cacheService = {
       const cacheKeys = keys.filter(key => key.startsWith(CACHE_PREFIX));
       await AsyncStorage.multiRemove(cacheKeys);
     } catch (error) {
-      console.error('Cache clear error:', error);
+      console.error('Error clearing cache:', error);
     }
-  },
-};
+  }
+}
+
+export const cacheService = new CacheService();
