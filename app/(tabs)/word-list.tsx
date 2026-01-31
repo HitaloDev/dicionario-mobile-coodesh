@@ -126,13 +126,16 @@ export default function WordListScreen() {
     setIsSearchLoading(false);
   };
 
-  const renderItem: ListRenderItem<WordItem> = ({ item }) => (
-    <WordCard
-      word={item.word}
-      isFavorite={isFavorite(item.word)}
-      onPress={() => handleWordPress(item.word)}
-      onFavoritePress={() => handleFavoritePress(item.word)}
-    />
+  const renderItem: ListRenderItem<WordItem> = useCallback(
+    ({ item }) => (
+      <WordCard
+        word={item.word}
+        isFavorite={isFavorite(item.word)}
+        onPress={() => handleWordPress(item.word)}
+        onFavoritePress={() => handleFavoritePress(item.word)}
+      />
+    ),
+    [isFavorite]
   );
 
   const renderFooter = () => {
@@ -185,7 +188,11 @@ export default function WordListScreen() {
         columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.gridContainer}
         onEndReached={loadMoreWords}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={1.5}
+        maxToRenderPerBatch={30}
+        windowSize={10}
+        removeClippedSubviews={true}
+        initialNumToRender={30}
         ListFooterComponent={renderFooter}
       />
     </View>

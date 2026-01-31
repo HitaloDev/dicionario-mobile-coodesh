@@ -12,7 +12,7 @@ interface WordsResponse {
   hasMore: boolean;
 }
 
-const WORDS_PER_PAGE = 30;
+const WORDS_PER_PAGE = 60;
 
 export const wordsService = {
   async getWords(page: number = 0): Promise<WordsResponse> {
@@ -20,9 +20,9 @@ export const wordsService = {
       const from = page * WORDS_PER_PAGE;
       const to = from + WORDS_PER_PAGE - 1;
 
-      const { data, error, count } = await supabase
+      const { data, error } = await supabase
         .from('words')
-        .select('*', { count: 'exact' })
+        .select('*')
         .order('word', { ascending: true })
         .range(from, to);
 
@@ -32,8 +32,8 @@ export const wordsService = {
 
       return {
         words: data || [],
-        total: count || 0,
-        hasMore: (count || 0) > to + 1,
+        total: 0,
+        hasMore: (data?.length || 0) === WORDS_PER_PAGE,
       };
     } catch (error) {
       console.error('Error fetching words:', error);
